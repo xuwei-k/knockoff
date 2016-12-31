@@ -8,7 +8,7 @@ field, etc.
 
 */
 
-package com.tristanhunt.knockoff
+package knockoff
 
 import java.io.{ StringWriter, Writer }
 

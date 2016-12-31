@@ -1,4 +1,4 @@
-package com.tristanhunt.knockoff
+package knockoff
 
 import java.io._
 import org.junit.runner.RunWith

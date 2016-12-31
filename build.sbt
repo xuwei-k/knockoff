@@ -8,7 +8,7 @@ scalaVersion := Scala212
 
 crossScalaVersions := Seq("2.11.8", Scala212)
 
-organization := "com.tristanhunt"
+organization := "org.foundweekends"
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",
@@ -43,7 +43,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>http://tristanjuricek.com/projects/knockoff</url>
+  <url>https://github.com/foundweekends/knockoff</url>
   <licenses>
     <license>
       <name>BSD-style</name>
@@ -52,13 +52,19 @@ pomExtra := (
     </license>
   </licenses>
   <scm>
-    <url>git@github.com:tristanjuricek/knockoff.git</url>
-    <connection>scm:git:git@github.com:tristanjuricek/knockoff.git</connection>
+    <url>git@github.com:foundweekends/knockoff.git</url>
+    <connection>scm:git:git@github.com:foundweekends/knockoff.git</connection>
   </scm>
   <developers>
+    <developer>
+      <id>xuwei-k</id>
+      <name>Kenji Yoshida</name>
+      <url>http://github.com/xuwei-k</url>
+    </developer>
     <developer>
       <id>tjuricek</id>
       <name>Tristan Juricek</name>
       <url>http://tristanjuricek.com</url>
     </developer>
-  </developers>)
+  </developers>
+)

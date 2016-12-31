@@ -1,4 +1,4 @@
-package com.tristanhunt.knockoff
+package knockoff
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner

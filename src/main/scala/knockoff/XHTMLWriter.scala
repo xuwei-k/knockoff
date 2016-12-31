@@ -11,7 +11,7 @@ not be 100% finished.
 
 */
 
-package com.tristanhunt.knockoff
+package knockoff
 
 import scala.util.{ Random }
 import scala.xml.{ Group, Node, Text => XMLText, Unparsed }

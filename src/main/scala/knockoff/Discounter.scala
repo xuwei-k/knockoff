@@ -5,11 +5,11 @@
 The `Discounter` is what grabs the "knockoff" of a markdown string. For simple usage,
 you can use the `DefaultDiscounter` object.
 
-    import com.tristanhunt.knockoff.DefaultDiscounter._
+    import knockoff.DefaultDiscounter._
     toXHTML( knockoff( markdownString ) )
 
 */
-package com.tristanhunt.knockoff
+package knockoff
 
 import scala.collection.mutable.ListBuffer
 import scala.util.parsing.input.Position

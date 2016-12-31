@@ -1,4 +1,4 @@
-package com.tristanhunt.knockoff
+package knockoff
 
 import scala.collection.mutable.ListBuffer
 

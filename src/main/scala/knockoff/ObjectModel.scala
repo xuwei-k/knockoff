@@ -16,7 +16,7 @@ strings.
 Links can be direct or indirect, or tagged as image variations of those links.
 
 */
-package com.tristanhunt.knockoff
+package knockoff
 
 import scala.io.{ Source }
 import scala.util.parsing.input.{ NoPosition, Position }

@@ -44,7 +44,7 @@ any errors in the document if possible. Errors are logged and we move ahead.
 
 */
 
-package com.tristanhunt.knockoff
+package knockoff
 
 import scala.annotation.tailrec
 import scala.util.parsing.input.{CharSequenceReader, Position, Reader}
