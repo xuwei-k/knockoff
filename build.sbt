@@ -1,7 +1,5 @@
 name:="knockoff"
 
-version:="0.8.3"
-
 val Scala212 = "2.12.1"
 
 scalaVersion := Scala212
