@@ -335,7 +335,7 @@ trait Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter)
+                     discounter: Discounter): Unit
 }
 
 case class HTMLChunk(content: String) extends Chunk {
@@ -343,7 +343,7 @@ case class HTMLChunk(content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     list += HTMLBlock(content, position)
   }
 }
@@ -364,7 +364,7 @@ case class BlockquotedChunk(content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     val blocks = discounter.knockoff(content)
     list += Blockquote(blocks, position)
   }
@@ -387,7 +387,7 @@ case class EmptySpace(val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     if (remaining.isEmpty) return
     if (list.isEmpty) return
     list.last match {
@@ -409,7 +409,7 @@ case class HeaderChunk(val level: Int, val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     list += Header(level, spans, position)
   }
 }
@@ -420,7 +420,7 @@ case object HorizontalRuleChunk extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     list += HorizontalRule(position)
   }
 }
@@ -445,7 +445,7 @@ case class IndentedChunk(val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     if (list.isEmpty) {
       spans.head match {
         case text: Text => list += CodeBlock(text, position)
@@ -491,7 +491,7 @@ case class LinkDefinitionChunk(val id: String, val url: String,
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     list += LinkDefinition(id, url, title, position)
   }
 }
@@ -501,7 +501,7 @@ case class NumberedLineChunk(val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     val li = OrderedItem(List(Paragraph(spans, position)), position)
     if (list.isEmpty) {
       list += OrderedList(List(li))
@@ -531,7 +531,7 @@ case class TextChunk(val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     def appendList = list += Paragraph(spans, position)
 
     if (list.isEmpty) {
@@ -570,7 +570,7 @@ case class BulletLineChunk(val content: String) extends Chunk {
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
-                     discounter: Discounter) {
+                     discounter: Discounter): Unit = {
     val li = UnorderedItem(List(Paragraph(spans, position)), position)
     if (list.isEmpty) {
       list += UnorderedList(List(li))
@@ -818,7 +818,7 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
   // Finds links in the format [name](link) for normal links or ![name](link)
   // for images.
   def findNormalMatch(source: String): Option[SpanMatch] = {
-    var imageIdx = source.indexOf('!')
+    val imageIdx = source.indexOf('!')
 
     val firstOpen = source.indexOf('[')
     if (firstOpen == -1) return None
@@ -834,14 +834,14 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
 
     val secondOpen = secondMatch.start(1)
 
-    var secondClose =
+    val secondClose =
       secondPart.findBalanced('(', ')', secondOpen).get
 
     if (secondClose == -1) return None
 
-    var titleMatcher = """<?([\S&&[^)>]]*)>?[\t ]+"([^)]*)"""".r // "
+    val titleMatcher = """<?([\S&&[^)>]]*)>?[\t ]+"([^)]*)"""".r // "
 
-    var linkContent = secondPart.substring(secondOpen + 1, secondClose)
+    val linkContent = secondPart.substring(secondOpen + 1, secondClose)
 
     var titleOpt: Option[String] = None
     var url: String = ""

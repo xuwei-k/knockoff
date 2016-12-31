@@ -10,6 +10,19 @@ crossScalaVersions := Seq("2.11.8", Scala212)
 
 organization := "org.foundweekends"
 
+val unusedWarnings = Seq(
+  "-Ywarn-unused",
+  "-Ywarn-unused-import"
+)
+
+scalacOptions ++= unusedWarnings
+
+scalacOptions ++= Seq("-language:_", "-deprecation", "-Xfuture", "-Xlint")
+
+Seq(Compile, Test).flatMap(c =>
+  scalacOptions in (c, console) --= unusedWarnings
+)
+
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   "junit" % "junit" % "4.12" % "test",

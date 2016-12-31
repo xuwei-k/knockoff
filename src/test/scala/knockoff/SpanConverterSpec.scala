@@ -3,7 +3,6 @@ package knockoff
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest._
-import scala.util.parsing.input.NoPosition
 
 @RunWith(classOf[JUnitRunner])
 class SpanConverterSpec extends FunSpecLike with Matchers {
@@ -133,8 +132,8 @@ class SpanConverterSpec extends FunSpecLike with Matchers {
     }
 
     it("should parse links ending in brackets") {
-      var text = """a [link](http://example.com/path_(foo))"""
-      var parsed = List( Text("a "),
+      val text = """a [link](http://example.com/path_(foo))"""
+      val parsed = List( Text("a "),
                          Link( List(Text("link")),
                                "http://example.com/path_(foo)",
                                None))

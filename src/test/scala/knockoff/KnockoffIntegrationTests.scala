@@ -60,7 +60,7 @@ class KnockoffIntegrationTests extends FunSpecLike with Matchers {
     /** A version that will actually compile under 2.8. */
     def text : String = {
       val reader = new BufferedReader( new FileReader( wrapped ) )
-      var lines = new ListBuffer[String]
+      val lines = new ListBuffer[String]
       try {
         var line = reader.readLine
         while( line != null ) {
