@@ -82,7 +82,7 @@ object DefaultDiscounter extends Discounter {
       Console.err.print("DefaultDiscounter ")
     }
     if (args.contains("--version") || args.contains("-shortversion")) {
-      Console.err.println("0.7.1-SNAPSHOT")
+      Console.err.println(KnockoffBuildInfo.version)
       return
     }
 
