@@ -382,7 +382,7 @@ This does not cover forced line brakes.
 
 */
 
-case class EmptySpace(val content: String) extends Chunk {
+case class EmptySpace(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
@@ -406,7 +406,7 @@ case class EmptySpace(val content: String) extends Chunk {
   }
 }
 
-case class HeaderChunk(val level: Int, val content: String) extends Chunk {
+case class HeaderChunk(level: Int, content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
@@ -442,7 +442,7 @@ reparse things.
 
 */
 
-case class IndentedChunk(val content: String) extends Chunk {
+case class IndentedChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
@@ -481,8 +481,8 @@ case class IndentedChunk(val content: String) extends Chunk {
   }
 }
 
-case class LinkDefinitionChunk(val id: String, val url: String,
-                               val title: Option[String])
+case class LinkDefinitionChunk(id: String, url: String,
+                               title: Option[String])
   extends Chunk {
 
   override def isLinkDefinition = true
@@ -498,7 +498,7 @@ case class LinkDefinitionChunk(val id: String, val url: String,
   }
 }
 
-case class NumberedLineChunk(val content: String) extends Chunk {
+case class NumberedLineChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
@@ -528,7 +528,7 @@ them will be an `HTMLSpan(<br/>)`
 
 */
 
-case class TextChunk(val content: String) extends Chunk {
+case class TextChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
@@ -567,7 +567,7 @@ case class TextChunk(val content: String) extends Chunk {
   }
 }
 
-case class BulletLineChunk(val content: String) extends Chunk {
+case class BulletLineChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
                      remaining: List[(Chunk, Seq[Span], Position)],
