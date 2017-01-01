@@ -1,5 +1,11 @@
 import sbtrelease.ReleaseStateTransformations._
 
+val tagName = Def.setting{
+  s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
+}
+
+releaseTagName := tagName.value
+
 releaseCrossBuild := true
 
 releaseProcess := Seq[ReleaseStep](
@@ -31,6 +37,16 @@ scalaVersion := Scala212
 crossScalaVersions := Seq("2.11.8", Scala212)
 
 organization := "org.foundweekends"
+
+val tagOrHash = Def.setting {
+  if(isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
+  else tagName.value
+}
+
+scalacOptions in (Compile, doc) ++= {
+  val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
+  Seq("-sourcepath", base, "-doc-source-url", "https://github.com/foundweekends/knockoff/tree/" + tagOrHash.value + "€{FILE_PATH}.scala")
+}
 
 val unusedWarnings = Seq(
   "-Ywarn-unused",
