@@ -799,10 +799,9 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
         val before = source.substring(0, open).toOption.map(Text(_))
         val html = HTMLSpan(source.substring(open, close + "-->".length))
         val after = source.substring(close + "-->".length).toOption
-        return Some(SpanMatch(open, before, html, after))
-      }
-    }
-    return None
+        Some(SpanMatch(open, before, html, after))
+      } else None
+    } else None
   }
 
 
