@@ -624,7 +624,7 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
 
 
   /** @param delim The delimiter string to match the next 2 sequences of.
-  @param toSpanMatch Factory to create the actual SpanMatch.
+  @param toSpan Factory to create the actual SpanMatch.
   @param recursive If you want the contained element to be reconverted.
   @param escape If set, how you can escape this sequence. */
   class DelimMatcher(delim: String, toSpan: Seq[Span] => Span,
