@@ -16,6 +16,12 @@ releaseProcess := Seq[ReleaseStep](
   pushChanges
 )
 
+enablePlugins(BuildInfoPlugin)
+
+buildInfoPackage := "knockoff"
+
+buildInfoObject := "KnockoffBuildInfo"
+
 name:="knockoff"
 
 val Scala212 = "2.12.1"
