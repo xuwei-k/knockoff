@@ -43,7 +43,7 @@ class KnockoffIntegrationTests extends FunSpecLike with Matchers {
   def normalizeSpace( str : String ) : String =
     str.replaceAll( "\\s+", " " )
 
-  class FileHelper( wrapped : File ) {
+  implicit class FileHelper( wrapped : File ) {
 
     /** Try to match files based on the fromExt to the toExt. */
     def listTests( fromExt : String, toExt : String ) : Seq[ (File, File) ] = {
@@ -73,8 +73,6 @@ class KnockoffIntegrationTests extends FunSpecLike with Matchers {
       lines.mkString("\n")
     }
   }
-
-  implicit def FileHelper( f : File ) = new FileHelper( f )
 
   // Skipped because attributes are printed in order causing test failures
   describe( "Discounter" ) {
