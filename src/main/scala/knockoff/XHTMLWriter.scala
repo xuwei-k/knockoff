@@ -25,7 +25,7 @@ trait XHTMLWriter {
   def toXHTML( blocks : Seq[Block] ) : Node =
     Group( blocks.map( blockToXHTML(_) ) )
 
-  def blockToXHTML : Block => Node = block => block match {
+  def blockToXHTML : Block => Node = {
     case Paragraph( spans, _ ) => paragraphToXHTML( spans )
     case Header( level, spans, _ ) => headerToXHTML( level, spans )
     case LinkDefinition( _, _, _, _ ) => Group( Nil )
