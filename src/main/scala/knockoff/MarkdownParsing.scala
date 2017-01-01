@@ -326,7 +326,7 @@ we've grabbed the spanning elements of each block, to construct the final
 
 import scala.collection.mutable.ListBuffer
 
-trait Chunk {
+sealed abstract class Chunk extends Product with Serializable {
   def content: String
 
   def isLinkDefinition = false
