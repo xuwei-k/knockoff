@@ -388,18 +388,20 @@ case class EmptySpace(val content: String) extends Chunk {
                      remaining: List[(Chunk, Seq[Span], Position)],
                      spans: Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
-    if (remaining.isEmpty) return
-    if (list.isEmpty) return
-    list.last match {
-      case lastCB: CodeBlock =>
-        remaining.head._1 match {
-          case ice: IndentedChunk =>
-            list.update(list.length - 1,
-              CodeBlock(Text(lastCB.text.content + "\n"),
-                lastCB.position))
+    (remaining, list) match {
+      case (head :: tail, init :+ last) =>
+        last match {
+          case lastCB: CodeBlock =>
+            head._1 match {
+              case ice: IndentedChunk =>
+                list.update(list.length - 1,
+                  CodeBlock(Text(lastCB.text.content + "\n"),
+                    lastCB.position))
+              case _ => {}
+            }
           case _ => {}
         }
-      case _ => {}
+      case _ =>
     }
   }
 }

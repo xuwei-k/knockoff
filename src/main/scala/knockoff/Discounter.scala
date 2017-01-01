@@ -55,10 +55,13 @@ trait Discounter extends ChunkStreamFactory with XHTMLWriter with TextWriter {
   private def combine(input: List[(Chunk, Seq[Span], Position)],
                       output: ListBuffer[Block])
   : Seq[Block] = {
-    if (input.isEmpty) return output
-    input.head._1.appendNewBlock(output, input.tail, input.head._2,
-      input.head._3, this)
-    combine(input.tail, output)
+    input match {
+      case h :: t =>
+        h._1.appendNewBlock(output, t, h._2, h._3, this)
+        combine(input.tail, output)
+      case Nil =>
+        output
+    }
   }
 }
 
