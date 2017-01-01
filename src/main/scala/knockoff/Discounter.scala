@@ -27,9 +27,12 @@ trait Discounter extends ChunkStreamFactory with XHTMLWriter with TextWriter {
     // way to match a tuple argument (thank you erasure!)
     val linkDefinitions = chunks.flatMap {
       case ((chunk, pos)) =>
-        if (chunk.isLinkDefinition)
-          List(chunk.asInstanceOf[LinkDefinitionChunk])
-        else Nil
+        chunk match {
+          case c: LinkDefinitionChunk =>
+            c :: Nil
+          case _ =>
+            Nil
+        }
     }
 
     val convert = createSpanConverter(linkDefinitions)
