@@ -2,7 +2,7 @@ package knockoff
 
 import scala.collection.mutable.ListBuffer
 
-class KnockoffString(private val wrapped: String) extends AnyVal {
+class KnockoffString(val wrapped: String) extends AnyVal {
 
   def substringOption (start: Int, finish: Int): Option[String] =
     if (start < finish) Some(wrapped.substring(start, finish))
