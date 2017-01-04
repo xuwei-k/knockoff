@@ -34,7 +34,7 @@ val Scala212 = "2.12.1"
 
 scalaVersion := Scala212
 
-crossScalaVersions := Seq("2.11.8", Scala212)
+crossScalaVersions := Seq("2.11.8", Scala212, "2.10.6")
 
 organization := "org.foundweekends"
 
@@ -53,7 +53,9 @@ val unusedWarnings = Seq(
   "-Ywarn-unused-import"
 )
 
-scalacOptions ++= unusedWarnings
+scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
+  case Some((2, v)) if v >= 11 => unusedWarnings
+}.toList.flatten
 
 scalacOptions ++= Seq("-language:_", "-deprecation", "-Xfuture", "-Xlint")
 
