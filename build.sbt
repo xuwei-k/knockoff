@@ -34,7 +34,7 @@ val Scala212 = "2.12.1"
 
 scalaVersion := Scala212
 
-crossScalaVersions := Seq("2.11.9", Scala212, "2.10.6")
+crossScalaVersions := Seq("2.11.8", Scala212, "2.10.6")
 
 organization := "org.foundweekends"
 
