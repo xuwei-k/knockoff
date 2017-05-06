@@ -96,7 +96,7 @@ object DefaultDiscounter extends Discounter {
       val sb = new StringBuilder
       var line: String = null
       do {
-        line = Console.readLine
+        line = Console.in.readLine()
         if (line != null) sb.append(line)
       } while (line != null)
       println(toXHTML(knockoff(sb.toString)).toString)
