@@ -64,7 +64,7 @@ Seq(Compile, Test).flatMap(c =>
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "junit" % "junit" % "4.12" % "test",
   "net.sf.jtidy" % "jtidy" % "r938" % "test"
 )
@@ -74,7 +74,7 @@ libraryDependencies := {
     case Some((2, scalaMajor)) if scalaMajor >= 11 =>
       libraryDependencies.value ++ Seq(
         "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
-        "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5"
+        "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
       )
     case _ =>
       libraryDependencies.value 
