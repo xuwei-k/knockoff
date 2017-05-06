@@ -30,11 +30,11 @@ buildInfoObject := "KnockoffBuildInfo"
 
 name:="knockoff"
 
-val Scala212 = "2.12.1"
+val Scala212 = "2.12.2"
 
 scalaVersion := Scala212
 
-crossScalaVersions := Seq("2.11.8", Scala212, "2.10.6")
+crossScalaVersions := Seq("2.11.11", Scala212, "2.10.6")
 
 organization := "org.foundweekends"
 
