@@ -30,7 +30,7 @@ buildInfoObject := "KnockoffBuildInfo"
 
 name:="knockoff"
 
-val Scala212 = "2.12.2"
+val Scala212 = "2.12.3"
 
 scalaVersion := Scala212
 
