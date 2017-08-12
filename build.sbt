@@ -15,10 +15,10 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
+  releaseStepCommand("publishSigned"),
   setNextVersion,
   commitNextVersion,
-  ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
 
@@ -39,7 +39,7 @@ crossScalaVersions := Seq("2.11.11", Scala212, "2.10.6", "2.13.0-M1")
 organization := "org.foundweekends"
 
 val tagOrHash = Def.setting {
-  if(isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
+  if(isSnapshot.value) sys.process.Process("git rev-parse HEAD").lineStream_!.head
   else tagName.value
 }
 
