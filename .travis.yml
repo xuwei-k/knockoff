@@ -4,9 +4,11 @@ scala:
 - 2.10.6
 - 2.11.11
 - 2.12.4
-- 2.13.0-M1
+- 2.13.0-M2
 jdk:
 - oraclejdk8
+before_script:
+- wget https://gist.githubusercontent.com/xuwei-k/58b082737d564b4720b850045cf7b5a9/raw/ce45396aa5b8a695e4599c6c0dcdac732d4c8042/workaround_3427.sbt
 matrix:
   include:
   - scala: 2.12.4

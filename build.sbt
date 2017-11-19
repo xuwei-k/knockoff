@@ -34,7 +34,7 @@ val Scala212 = "2.12.4"
 
 scalaVersion := Scala212
 
-crossScalaVersions := Seq("2.11.11", Scala212, "2.10.6", "2.13.0-M1")
+crossScalaVersions := Seq("2.11.11", Scala212, "2.10.6", "2.13.0-M2")
 
 organization := "org.foundweekends"
 
@@ -64,7 +64,7 @@ Seq(Compile, Test).flatMap(c =>
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
   "junit" % "junit" % "4.12" % "test",
   "net.sf.jtidy" % "jtidy" % "r938" % "test"
 )
