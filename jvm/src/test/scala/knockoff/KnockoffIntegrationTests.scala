@@ -13,7 +13,7 @@ import scala.xml.{ Node, XML }
 class KnockoffIntegrationTests extends FunSpecLike with Matchers {
 
 
-  val basedir = "src/test/resources/tests"
+  val basedir = "jvm/src/test/resources/tests"
 
   val jtidy = {
     val tidy = new Tidy
