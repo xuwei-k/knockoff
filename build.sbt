@@ -72,19 +72,9 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     name := "knockoff",
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.12" % "test",
+      "org.scalatest" %%% "scalatest" % "3.0.5-M1" % "test",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
-    // TODO enable test https://github.com/scalatest/scalatest/issues/1321
-    libraryDependencies ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, v)) if v <= 12 =>
-          Seq(
-            "org.scalatest" %%% "scalatest" % "3.0.5" % "test",
-          )
-        case _ =>
-          Nil
-      }
-    },
     publishMavenStyle := true,
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
