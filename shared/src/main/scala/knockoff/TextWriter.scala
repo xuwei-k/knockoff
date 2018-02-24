@@ -1,4 +1,4 @@
-/* 
+/*
 
 The utility of plain text is mostly to get the text without any markup, useful
 in cases where you're doing something like pulling the header into a title
@@ -13,17 +13,17 @@ package knockoff
 import java.io.{ StringWriter, Writer }
 
 trait TextWriter {
-  
+
   /** Creates a Group representation of the document. */
   def toText( blocks : Seq[Block] ) : String = {
     implicit val writer = new StringWriter
     blocksToText( blocks )
     writer.toString
   }
-  
+
   def blocksToText( blocks : Seq[Block] )( implicit writer : Writer ) : Unit =
     blocks.foreach( blockToText )
-  
+
   def blockToText( block : Block )( implicit writer : Writer ) : Unit = {
     block match {
       case Paragraph( spans, _ ) => spans.foreach( spanToText )
@@ -39,11 +39,11 @@ trait TextWriter {
     }
     writer.write(" ")
   }
-  
+
   def spanToText( span : Span )( implicit writer : Writer ) : Unit = {
     span match {
       case Text( content ) => writer.write( content )
-      case HTMLSpan( html ) => {} 
+      case HTMLSpan( html ) => {}
       case CodeSpan( code ) => writer.write( code )
       case Strong( children ) => children.foreach( spanToText )
       case Emphasis( children ) => children.foreach( spanToText )

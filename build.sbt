@@ -6,12 +6,12 @@ val tagName = Def.setting{
 }
 
 val Scala212 = "2.12.4"
- 
+
 val tagOrHash = Def.setting {
   if(isSnapshot.value) sys.process.Process("git rev-parse HEAD").lineStream_!.head
   else tagName.value
 }
- 
+
 val unusedWarnings = Seq(
   "-Ywarn-unused",
   "-Ywarn-unused-import"
@@ -118,7 +118,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
             "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.0"
           )
         case _ =>
-          libraryDependencies.value 
+          libraryDependencies.value
       }
     }
   )
