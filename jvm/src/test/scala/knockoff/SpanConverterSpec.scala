@@ -1,11 +1,8 @@
 package knockoff
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest._
 
-@RunWith(classOf[JUnitRunner])
-class SpanConverterSpec extends FunSpecLike with Matchers {
+class SpanConverterSpec extends FunSpec with Matchers {
 
   def convert( txt : String ) : List[Span] = convert( txt, Nil )
 
