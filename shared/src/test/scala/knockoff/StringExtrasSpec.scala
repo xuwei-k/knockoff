@@ -1,11 +1,8 @@
 package knockoff
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest._
 
-@RunWith(classOf[JUnitRunner])
-class StringExtrasSpec extends FunSpecLike with Matchers with StringExtras {
+class StringExtrasSpec extends FunSpec with Matchers with StringExtras {
     
   describe("StringExtras") {
     it( "should find two different groups of the same time" ) {
@@ -35,13 +32,6 @@ class StringExtrasSpec extends FunSpecLike with Matchers with StringExtras {
     
     it("should handle only the characters up front") {
       "## unbalanced #".countLeading('#') should equal (2)
-    }
-  }
-  
-  describe("StringExtras.trimChars(ch)") {
-    it("should remove likely headers with the match char inside") {
-      "## Who does #2 work for? #".trimChars('#').trim should equal (
-        "Who does #2 work for?" )
     }
   }
   
