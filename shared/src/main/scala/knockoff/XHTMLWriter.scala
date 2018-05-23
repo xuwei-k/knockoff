@@ -19,10 +19,10 @@ import scala.xml.{ Group, Node, Text => XMLText, Unparsed }
 trait XHTMLWriter {
 
   /** Backwards compatibility? *cough* */
-  def toXML( blocks : Seq[Block] ) : Node = toXHTML( blocks )
+  def toXML( blocks : collection.Seq[Block] ) : Node = toXHTML( blocks )
 
   /** Creates a Group representation of the document. */
-  def toXHTML( blocks : Seq[Block] ) : Node =
+  def toXHTML( blocks : collection.Seq[Block] ) : Node =
     Group( blocks.map( blockToXHTML(_) ) )
 
   def blockToXHTML : Block => Node = {
@@ -41,7 +41,7 @@ trait XHTMLWriter {
 
   def htmlBlockToXHTML : String => Node = html => Unparsed( html )
 
-  def paragraphToXHTML : Seq[Span] => Node = spans => {
+  def paragraphToXHTML : collection.Seq[Span] => Node = spans => {
     def isHTML( s : Span ) = s match {
       case y : HTMLSpan => true
       case Text( content ) => if ( content.trim.isEmpty ) true else false
@@ -53,7 +53,7 @@ trait XHTMLWriter {
       <p>{ spans.map( spanToXHTML(_) ) }</p>
   }
 
-  def headerToXHTML : ( Int, Seq[Span] ) => Node = (level, spans) => {
+  def headerToXHTML : ( Int, collection.Seq[Span] ) => Node = (level, spans) => {
     val spanned = spans.map( spanToXHTML(_) )
     level match {
       case 1 => <h1>{ spanned }</h1>
@@ -66,7 +66,7 @@ trait XHTMLWriter {
     }
   }
 
-  def blockquoteToXHTML : Seq[Block] => Node =
+  def blockquoteToXHTML : collection.Seq[Block] => Node =
     children => <blockquote>{ children.map( blockToXHTML(_) ) }</blockquote>
 
   def codeToXHTML : Text => Node =
@@ -74,10 +74,10 @@ trait XHTMLWriter {
 
   def hrXHTML : Node = <hr/>
 
-  def liToXHTML : Seq[Block] => Node =
+  def liToXHTML : collection.Seq[Block] => Node =
     children => <li>{ simpleOrComplex( children ) }</li>
 
-  private def simpleOrComplex( children : Seq[Block] ) : Seq[Node] = {
+  private def simpleOrComplex( children : collection.Seq[Block] ) : collection.Seq[Node] = {
     if ( children.length == 1 )
       children.head match {
         case Paragraph( spans, _ ) => spans.map( spanToXHTML(_) )
@@ -87,10 +87,10 @@ trait XHTMLWriter {
       children.map( blockToXHTML(_) )
   }
 
-  def olToXHTML : Seq[Block] => Node =
+  def olToXHTML : collection.Seq[Block] => Node =
     items => <ol>{ items.map( blockToXHTML(_) ) }</ol>
 
-  def ulToXHTML : Seq[Block] => Node =
+  def ulToXHTML : collection.Seq[Block] => Node =
     items => <ul>{ items.map( blockToXHTML(_) ) }</ul>
 
   def spanToXHTML : Span => Node = span => span match {
@@ -113,20 +113,20 @@ trait XHTMLWriter {
 
   def codeSpanToXHTML : String => Node = code => <code>{ code }</code>
 
-  def strongToXHTML : Seq[Span] => Node =
+  def strongToXHTML : collection.Seq[Span] => Node =
     spans => <strong>{ spans.map( spanToXHTML(_) ) }</strong>
 
-  def emphasisToXHTML : Seq[Span] => Node =
+  def emphasisToXHTML : collection.Seq[Span] => Node =
     spans => <em>{ spans.map( spanToXHTML(_) ) }</em>
 
-  def linkToXHTML : ( Seq[Span], String, Option[String] ) => Node = {
+  def linkToXHTML : ( collection.Seq[Span], String, Option[String] ) => Node = {
     ( spans, url, title ) => <a href={ escapeURL(url) }
                                    title={ title.getOrElse(null) }>{
                                   spans.map( spanToXHTML(_) )
                                 }</a>
   }
 
-  def imageLinkToXHTML : ( Seq[Span], String, Option[String] ) => Node = {
+  def imageLinkToXHTML : ( collection.Seq[Span], String, Option[String] ) => Node = {
     ( spans, url, title ) => <img src={ url } title={ title.getOrElse(null) }
                                      alt={ spans.map( spanToXHTML(_) ) } ></img>
   }

@@ -15,13 +15,13 @@ import java.io.{ StringWriter, Writer }
 trait TextWriter {
 
   /** Creates a Group representation of the document. */
-  def toText( blocks : Seq[Block] ) : String = {
+  def toText( blocks : collection.Seq[Block] ) : String = {
     implicit val writer = new StringWriter
     blocksToText( blocks )
     writer.toString
   }
 
-  def blocksToText( blocks : Seq[Block] )( implicit writer : Writer ) : Unit =
+  def blocksToText( blocks : collection.Seq[Block] )( implicit writer : Writer ) : Unit =
     blocks.foreach( blockToText )
 
   def blockToText( block : Block )( implicit writer : Writer ) : Unit = {

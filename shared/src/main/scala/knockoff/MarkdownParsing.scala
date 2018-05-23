@@ -333,16 +333,16 @@ trait Chunk {
 
   /** Create the Block and append to the list. */
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit
 }
 
 case class HTMLChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     list += HTMLBlock(content, position)
   }
@@ -362,8 +362,8 @@ case class BlockquotedChunk(content: String) extends Chunk {
   /** @param content The material, not parsed, but also not containing this
                      level's '>' characters. */
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     val blocks = discounter.knockoff(content)
     list += Blockquote(blocks, position)
@@ -385,8 +385,8 @@ This does not cover forced line brakes.
 case class EmptySpace(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     (remaining, list) match {
       case (head :: tail, init :+ last) =>
@@ -409,8 +409,8 @@ case class EmptySpace(content: String) extends Chunk {
 case class HeaderChunk(level: Int, content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     list += Header(level, spans, position)
   }
@@ -420,8 +420,8 @@ case object HorizontalRuleChunk extends Chunk {
   val content = "* * *\n"
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     list += HorizontalRule(position)
   }
@@ -445,8 +445,8 @@ reparse things.
 case class IndentedChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     if (list.isEmpty) {
       spans.head match {
@@ -491,8 +491,8 @@ case class LinkDefinitionChunk(id: String, url: String,
     "[" + id + "]: " + url + title.map(" \"" + _ + "\"").getOrElse("")
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     list += LinkDefinition(id, url, title, position)
   }
@@ -501,8 +501,8 @@ case class LinkDefinitionChunk(id: String, url: String,
 case class NumberedLineChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     val li = OrderedItem(List(Paragraph(spans, position)), position)
     if (list.isEmpty) {
@@ -531,8 +531,8 @@ them will be an `HTMLSpan(<br/>)`
 case class TextChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     def appendList = list += Paragraph(spans, position)
 
@@ -552,7 +552,7 @@ case class TextChunk(content: String) extends Chunk {
     }
   }
 
-  def endsWithBreak(spans: Seq[Span]): Boolean = {
+  def endsWithBreak(spans: collection.Seq[Span]): Boolean = {
     if (spans.isEmpty) return false
     spans.last match {
       case text: Text =>
@@ -561,7 +561,7 @@ case class TextChunk(content: String) extends Chunk {
     }
   }
 
-  def appendBreakAndSpans(preSpans: Seq[Span], tailSpans: Seq[Span],
+  def appendBreakAndSpans(preSpans: collection.Seq[Span], tailSpans: collection.Seq[Span],
                           position: Position): Paragraph = {
     Paragraph(preSpans ++ List(HTMLSpan("<br/>\n")) ++ tailSpans, position)
   }
@@ -570,8 +570,8 @@ case class TextChunk(content: String) extends Chunk {
 case class BulletLineChunk(content: String) extends Chunk {
 
   def appendNewBlock(list: ListBuffer[Block],
-                     remaining: List[(Chunk, Seq[Span], Position)],
-                     spans: Seq[Span], position: Position,
+                     remaining: List[(Chunk, collection.Seq[Span], Position)],
+                     spans: collection.Seq[Span], position: Position,
                      discounter: Discounter): Unit = {
     val li = UnorderedItem(List(Paragraph(spans, position)), position)
     if (list.isEmpty) {
@@ -614,8 +614,8 @@ substring of that span.
 */
 
 
-class SpanConverter(definitions: Seq[LinkDefinitionChunk])
-  extends Function1[Chunk, Seq[Span]] with StringExtras {
+class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
+  extends Function1[Chunk, collection.Seq[Span]] with StringExtras {
 
   /*
     The primary result returned by a `SpanMatcher`. It's `index` will become an
@@ -629,7 +629,7 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
   @param toSpan Factory to create the actual SpanMatch.
   @param recursive If you want the contained element to be reconverted.
   @param escape If set, how you can escape this sequence. */
-  class DelimMatcher(delim: String, toSpan: Seq[Span] => Span,
+  class DelimMatcher(delim: String, toSpan: collection.Seq[Span] => Span,
                      recursive: Boolean, escape: Option[Char])
     extends Function1[String, Option[SpanMatch]] {
 
@@ -650,7 +650,7 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
     }
   }
 
-  def apply(chunk: Chunk): Seq[Span] = {
+  def apply(chunk: Chunk): collection.Seq[Span] = {
     chunk match {
       case IndentedChunk(content) => List(new Text(content))
       case _ => convert(chunk.content, Nil)
@@ -658,7 +658,7 @@ class SpanConverter(definitions: Seq[LinkDefinitionChunk])
   }
 
   /** Tail-recursive method halts when the content argument is empty. */
-  protected def convert(content: String, current: List[Span]): Seq[Span] = {
+  protected def convert(content: String, current: List[Span]): collection.Seq[Span] = {
 
     if (content.isEmpty) return current
 

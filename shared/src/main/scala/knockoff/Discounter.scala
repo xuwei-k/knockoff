@@ -19,7 +19,7 @@ trait Discounter extends ChunkStreamFactory with TextWriter {
 
   /** Parses and returns our best guess at the sequence of blocks. It will
       never fail, just log all suspicious things. */
-  def knockoff(source: java.lang.CharSequence): Seq[Block] = {
+  def knockoff(source: java.lang.CharSequence): collection.Seq[Block] = {
 
     val chunks = createChunkStream(new CharSequenceReader(source, 0))
 
@@ -45,16 +45,16 @@ trait Discounter extends ChunkStreamFactory with TextWriter {
     combine(spanned.toList, new ListBuffer)
   }
 
-  def createSpanConverter(linkDefinitions: Seq[LinkDefinitionChunk]): SpanConverter =
+  def createSpanConverter(linkDefinitions: collection.Seq[LinkDefinitionChunk]): SpanConverter =
     new SpanConverter(linkDefinitions)
 
   /** Consume input and append the right thing to the output until empty. The
       Chunk itself determines the "right thing to do". All chunks only know what
       has come before itself, by peering into the output. (It shouldn't matter
       what comes next...) */
-  private def combine(input: List[(Chunk, Seq[Span], Position)],
+  private def combine(input: List[(Chunk, collection.Seq[Span], Position)],
                       output: ListBuffer[Block])
-  : Seq[Block] = {
+  : collection.Seq[Block] = {
     input match {
       case h :: t =>
         h._1.appendNewBlock(output, t, h._2, h._3, this)
