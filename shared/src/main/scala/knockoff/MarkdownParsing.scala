@@ -310,7 +310,7 @@ class ChunkParser extends RegexParsers with StringExtras {
 
   /** Take a series of very similar chunks and group them. */
   private def foldedString(texts: List[Chunk]): String =
-    ("" /: texts)((current, text) => current + text.content)
+    texts.foldLeft("")((current, text) => current + text.content)
 }
 
 /*
@@ -664,7 +664,7 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
 
     val textOnly = SpanMatch(content.length, None, Text(content), None)
 
-    val best = (textOnly /: matchers) {
+    val best = matchers.foldLeft(textOnly) {
       (current, findMatch) =>
         findMatch(content) match {
           case None => current

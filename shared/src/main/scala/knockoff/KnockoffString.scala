@@ -75,7 +75,7 @@ class KnockoffString(val wrapped: String) extends AnyVal {
   }
 
   def countLeading (ch: Char): Int = {
-    (0 /: wrapped) { (total, next) =>
+    wrapped.foldLeft(0) { (total, next) =>
       if (next != ch) return total
       total + 1
     }
