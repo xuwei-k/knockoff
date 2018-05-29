@@ -40,7 +40,7 @@ val commonSettings = Seq[Def.SettingsDefinition](
     pushChanges
   ),
   scalaVersion := Scala212,
-  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-M3"),
+  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-M4"),
   organization := "org.foundweekends",
   scalacOptions in (Compile, doc) ++= {
     val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
@@ -71,9 +71,13 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
     libraryDependencies ++= Seq(
-      "org.scalatest" %%% "scalatest" % "3.0.5-M1" % "test",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
+    libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
+      case Some((2, v)) if v < 13 =>
+        // TODO https://github.com/scalatest/scalatest/issues/1367
+        "org.scalatest" %% "scalatest" % "3.0.5-M1"
+    }.toList,
     publishMavenStyle := true,
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
