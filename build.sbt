@@ -119,7 +119,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
         case Some((2, scalaMajor)) if scalaMajor >= 11 =>
           libraryDependencies.value ++ Seq(
             "org.scala-lang.modules" %%% "scala-xml" % "1.1.0",
-            "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.0"
+            "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.1"
           )
         case _ =>
           libraryDependencies.value
