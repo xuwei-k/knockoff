@@ -71,13 +71,9 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
     libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.0.6-SNAP1",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
-    libraryDependencies ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
-      case Some((2, v)) if v < 13 =>
-        // TODO https://github.com/scalatest/scalatest/issues/1367
-        "org.scalatest" %% "scalatest" % "3.0.5-M1"
-    }.toList,
     publishMavenStyle := true,
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
