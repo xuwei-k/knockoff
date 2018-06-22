@@ -13,8 +13,7 @@ val tagOrHash = Def.setting {
 }
 
 val unusedWarnings = Seq(
-  "-Ywarn-unused",
-  "-Ywarn-unused-import"
+  "-Ywarn-unused"
 )
 
 val commonSettings = Seq[Def.SettingsDefinition](
