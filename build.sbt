@@ -69,8 +69,13 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoPackage := "knockoff",
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
+    libraryDependencies ++= {
+      if (scalaVersion.value == "2.13.0-M5")
+        Nil
+      else
+        Seq("org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % "test")
+    },
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % "test",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
     publishMavenStyle := true,
