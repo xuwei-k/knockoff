@@ -4,7 +4,7 @@ scala:
 - 2.10.7
 - 2.11.12
 - 2.12.7
-- 2.13.0-M4
+- 2.13.0-M5
 jdk:
 - oraclejdk8
 script:
@@ -13,9 +13,6 @@ matrix:
   include:
   - scala: 2.12.7
     jdk: openjdk11
-  - scala: 2.13.0-M5
-    script:
-    - sbt "++${TRAVIS_SCALA_VERSION}! -v" compile
 cache:
   directories:
   - $HOME/.ivy2/cache
