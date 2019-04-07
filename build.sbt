@@ -16,6 +16,8 @@ val unusedWarnings = Seq(
   "-Ywarn-unused"
 )
 
+val parserCombinatorsVersion = settingKey[String]("")
+
 val commonSettings = Seq[Def.SettingsDefinition](
   releaseTagName := tagName.value,
   releaseCrossBuild := true,
@@ -39,7 +41,7 @@ val commonSettings = Seq[Def.SettingsDefinition](
     pushChanges
   ),
   scalaVersion := Scala212,
-  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-M5"),
+  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-RC1"),
   organization := "org.foundweekends",
   scalacOptions in (Compile, doc) ++= {
     val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
@@ -70,7 +72,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.7" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.8-RC2" % "test",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
     publishMavenStyle := true,
@@ -109,12 +111,20 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
         </developer>
       </developers>
     ),
+    parserCombinatorsVersion := {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 11)) =>
+          "1.1.1"
+        case _ =>
+          "1.1.2"
+      }
+    },
     libraryDependencies := {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, scalaMajor)) if scalaMajor >= 11 =>
           libraryDependencies.value ++ Seq(
-            "org.scala-lang.modules" %%% "scala-xml" % "1.1.0",
-            "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.1"
+            "org.scala-lang.modules" %%% "scala-xml" % "1.2.0",
+            "org.scala-lang.modules" %%% "scala-parser-combinators" % parserCombinatorsVersion.value
           )
         case _ =>
           libraryDependencies.value
