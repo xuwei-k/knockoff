@@ -277,17 +277,17 @@ class ChunkParser extends RegexParsers with StringExtras {
       var openCountArg = openCount
       var bufArg = buf
       ("(?i)<[ ]*" + tagName + "[ ]*[^>]*>").r.findFirstMatchIn(buf.toString) match {
-        case Some(matcher) ⇒
+        case Some(matcher) =>
           openCountArg = openCount + 1
           bufArg = new StringBuilder
-        case None ⇒
+        case None =>
           ("(?i)</[ ]*" + tagName + "[ ]*>").r.findFirstMatchIn(buf.toString) match {
-            case Some(matcher) if openCount == 1 ⇒
+            case Some(matcher) if openCount == 1 =>
               return Some((sb.toString, in.rest))
-            case Some(matcher) ⇒
+            case Some(matcher) =>
               openCountArg = openCount - 1
               bufArg = new StringBuilder
-            case None ⇒
+            case None =>
           }
       }
       findEnd(in.rest, tagName, openCountArg, sb, bufArg)
