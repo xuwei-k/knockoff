@@ -41,7 +41,7 @@ val commonSettings = Seq[Def.SettingsDefinition](
     pushChanges
   ),
   scalaVersion := Scala212,
-  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-RC1"),
+  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0-RC2"),
   organization := "org.foundweekends",
   scalacOptions in (Compile, doc) ++= {
     val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
@@ -72,7 +72,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.8-RC3" % "test",
+      "org.scalatest" %% "scalatest" % "3.1.0-SNAP11" % "test",
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
     publishMavenStyle := true,
