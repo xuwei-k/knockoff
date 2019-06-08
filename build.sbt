@@ -25,7 +25,7 @@ val unusedWarnings = Def.setting(
 
 val parserCombinatorsVersion = settingKey[String]("")
 
-val commonSettings = Seq[Def.SettingsDefinition](
+val commonSettings = Def.settings(
   releaseTagName := tagName.value,
   releaseCrossBuild := true,
   releaseProcess := Seq[ReleaseStep](
@@ -72,7 +72,7 @@ val commonSettings = Seq[Def.SettingsDefinition](
   Seq(Compile, Test).flatMap(c =>
     scalacOptions in (c, console) --= unusedWarnings.value
   ),
-).flatMap(_.settings)
+)
 
 commonSettings
 
