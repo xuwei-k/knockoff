@@ -60,7 +60,15 @@ val commonSettings = Seq[Def.SettingsDefinition](
     )
   },
   scalacOptions ++= unusedWarnings.value,
-  scalacOptions ++= Seq("-language:_", "-deprecation", "-Xfuture", "-Xlint"),
+  scalacOptions ++= Seq("-language:_", "-deprecation", "-Xlint"),
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v <= 12 =>
+        Seq("-Xfuture")
+      case _ =>
+        Nil
+    }
+  },
   Seq(Compile, Test).flatMap(c =>
     scalacOptions in (c, console) --= unusedWarnings.value
   ),
