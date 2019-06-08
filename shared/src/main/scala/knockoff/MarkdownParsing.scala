@@ -60,16 +60,19 @@ trait ChunkStreamFactory  {
     createChunkStream(new CharSequenceReader(str, 0))
 
   def createChunkStream(reader: Reader[Char]): Stream[(Chunk, Position)] = {
-    if (reader.atEnd) return Stream.empty
-    chunkParser.parse(chunkParser.chunk, reader) match {
-      case chunkParser.Error(msg, next) => {
-        createChunkStream(next)
-      }
-      case chunkParser.Failure(msg, next) => {
-        createChunkStream(next)
-      }
-      case chunkParser.Success(result, next) => {
-        Stream.cons((result, reader.pos), createChunkStream(next))
+    if (reader.atEnd) {
+      Stream.empty
+    } else {
+      chunkParser.parse(chunkParser.chunk, reader) match {
+        case chunkParser.Error(msg, next) => {
+          createChunkStream(next)
+        }
+        case chunkParser.Failure(msg, next) => {
+          createChunkStream(next)
+        }
+        case chunkParser.Success(result, next) => {
+          Stream.cons((result, reader.pos), createChunkStream(next))
+        }
       }
     }
   }
@@ -156,16 +159,24 @@ class ChunkParser extends RegexParsers with StringExtras {
 
     def apply(in: Reader[Char]): ParseResult[String] = {
       val (line, asterixCount, remaining) = readLine(in, new StringBuilder, 0)
-      if (asterixCount >= 1 && asterixCount % 2 == 1) return Success(line, remaining)
-      else Failure("Odd number of asterixes, skipping.", in)
+      if (asterixCount >= 1 && asterixCount % 2 == 1) {
+        Success(line, remaining)
+      } else {
+        Failure("Odd number of asterixes, skipping.", in)
+      }
     }
 
+    @tailrec
     def readLine(in: Reader[Char], sb: StringBuilder, count: Int)
     : (String, Int, Reader[Char]) = {
       if (!in.atEnd) sb.append(in.first)
-      if (in.atEnd || in.first == '\n') return (sb.toString, count, in.rest)
-      if (in.first == '*') readLine(in.rest, sb, count + 1)
-      else readLine(in.rest, sb, count)
+      if (in.atEnd || in.first == '\n') {
+        (sb.toString, count, in.rest)
+      } else if (in.first == '*') {
+        readLine(in.rest, sb, count + 1)
+      } else {
+        readLine(in.rest, sb, count)
+      }
     }
   }
 
@@ -256,14 +267,19 @@ class ChunkParser extends RegexParsers with StringExtras {
 
     private val startElement = """^<[ ]*([a-zA-Z0-9:_]+)[ \t]*[^>]*?(/?+)>""".r
 
+    @tailrec
     def findStart(in: Reader[Char], sb: StringBuilder): Option[(String, StringBuilder, Reader[Char])] = {
       if (!in.atEnd) sb.append(in.first)
-      if (in.atEnd || in.first == '\n') return None
-      startElement.findFirstMatchIn(sb.toString).foreach {
-        matcher =>
-          return Some((matcher.group(1), sb, in.rest))
+      if (in.atEnd || in.first == '\n') {
+        None
+      } else {
+        startElement.findFirstMatchIn(sb.toString) match {
+          case Some(matcher) =>
+            Some((matcher.group(1), sb, in.rest))
+          case None =>
+            findStart(in.rest, sb)
+        }
       }
-      findStart(in.rest, sb)
     }
 
     @tailrec
@@ -273,24 +289,37 @@ class ChunkParser extends RegexParsers with StringExtras {
         sb.append(in.first)
         buf.append(in.first)
       }
-      if (in.atEnd) return None
-      var openCountArg = openCount
-      var bufArg = buf
-      ("(?i)<[ ]*" + tagName + "[ ]*[^>]*>").r.findFirstMatchIn(buf.toString) match {
-        case Some(matcher) =>
-          openCountArg = openCount + 1
-          bufArg = new StringBuilder
-        case None =>
-          ("(?i)</[ ]*" + tagName + "[ ]*>").r.findFirstMatchIn(buf.toString) match {
-            case Some(matcher) if openCount == 1 =>
-              return Some((sb.toString, in.rest))
-            case Some(matcher) =>
-              openCountArg = openCount - 1
-              bufArg = new StringBuilder
-            case None =>
-          }
+      if (in.atEnd) {
+        None
+      } else {
+        var openCountArg = openCount
+        var bufArg = buf
+
+        val result = ("(?i)<[ ]*" + tagName + "[ ]*[^>]*>").r.findFirstMatchIn(buf.toString) match {
+          case Some(matcher) =>
+            openCountArg = openCount + 1
+            bufArg = new StringBuilder
+            None
+          case None =>
+            ("(?i)</[ ]*" + tagName + "[ ]*>").r.findFirstMatchIn(buf.toString) match {
+              case Some(matcher) if openCount == 1 =>
+                Some((sb.toString, in.rest))
+              case Some(matcher) =>
+                openCountArg = openCount - 1
+                bufArg = new StringBuilder
+                None
+              case None =>
+                None
+            }
+        }
+
+        result match {
+          case x @ Some(_) =>
+            x
+          case None =>
+            findEnd(in.rest, tagName, openCountArg, sb, bufArg)
+        }
       }
-      findEnd(in.rest, tagName, openCountArg, sb, bufArg)
     }
   }
 
@@ -553,11 +582,14 @@ case class TextChunk(content: String) extends Chunk {
   }
 
   def endsWithBreak(spans: collection.Seq[Span]): Boolean = {
-    if (spans.isEmpty) return false
-    spans.last match {
-      case text: Text =>
-        text.content.endsWith("  \n")
-      case _ => false
+    if (spans.isEmpty) {
+      false
+    } else {
+      spans.last match {
+        case text: Text =>
+          text.content.endsWith("  \n")
+        case _ => false
+      }
     }
   }
 
@@ -637,14 +669,17 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
 
       source.nextNIndicesOf(2, delim, escape) match {
         case List(start, end) =>
-          if (start + delim.length >= end) return None
-          val contained = source.substring(start + delim.length, end)
-          val content = if (recursive) convert(contained, Nil)
-          else List(Text(contained))
-          val before = source.substringOption(0, start).map(Text(_))
-          val after = source.substringOption(end + delim.length, source.length)
-          val mapped = toSpan(content)
-          Some(SpanMatch(start, before, mapped, after))
+          if (start + delim.length >= end) {
+            None
+          } else {
+            val contained = source.substring(start + delim.length, end)
+            val content = if (recursive) convert(contained, Nil)
+            else List(Text(contained))
+            val before = source.substringOption(0, start).map(Text(_))
+            val after = source.substringOption(end + delim.length, source.length)
+            val mapped = toSpan(content)
+            Some(SpanMatch(start, before, mapped, after))
+          }
         case _ => None
       }
     }
@@ -658,27 +693,30 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
   }
 
   /** Tail-recursive method halts when the content argument is empty. */
-  protected def convert(content: String, current: List[Span]): collection.Seq[Span] = {
+  @tailrec
+  protected final def convert(content: String, current: List[Span]): collection.Seq[Span] = {
 
-    if (content.isEmpty) return current
+    if (content.isEmpty) {
+      current
+    } else {
+      val textOnly = SpanMatch(content.length, None, Text(content), None)
 
-    val textOnly = SpanMatch(content.length, None, Text(content), None)
+      val best = matchers.foldLeft(textOnly) {
+        (current, findMatch) =>
+          findMatch(content) match {
+            case None => current
+            case Some(nextMatch) =>
+              if (nextMatch.index < current.index) nextMatch
+              else current
+          }
+      }
 
-    val best = matchers.foldLeft(textOnly) {
-      (current, findMatch) =>
-        findMatch(content) match {
-          case None => current
-          case Some(nextMatch) =>
-            if (nextMatch.index < current.index) nextMatch
-            else current
-        }
-    }
+      val updated = current ::: best.before.toList ::: List(best.current)
 
-    val updated = current ::: best.before.toList ::: List(best.current)
-
-    best.after match {
-      case None => updated
-      case Some(remaining) => convert(remaining, updated)
+      best.after match {
+        case None => updated
+        case Some(remaining) => convert(remaining, updated)
+      }
     }
   }
 
@@ -770,9 +808,9 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
     val nextOpen = opener.findFirstMatchIn(source.substring(from))
     val nextClose = closer.findFirstMatchIn(source.substring(from))
 
-    if (!nextClose.isDefined) return None
-
-    if (nextOpen.isDefined && (nextOpen.get.start < nextClose.get.start)) {
+    if (!nextClose.isDefined) {
+      None
+    } else if (nextOpen.isDefined && (nextOpen.get.start < nextClose.get.start)) {
       hasMatchedClose(source, tag, from + nextOpen.get.end, opens + 1)
     } else if (opens > 1) {
       hasMatchedClose(source, tag, from + nextClose.get.end, opens - 1)
@@ -822,92 +860,96 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
     val imageIdx = source.indexOf('!')
 
     val firstOpen = source.indexOf('[')
-    if (firstOpen == -1) return None
+    if (firstOpen == -1) {
+      None
+    } else {
+      source.findBalanced('[', ']', firstOpen).flatMap { firstClose =>
+        val wrapped = source.substring(firstOpen + 1, firstClose)
+        val secondPart = source.substring(firstClose + 1)
 
-    val firstClose =
-      source.findBalanced('[', ']', firstOpen).getOrElse(return None)
+        """^\s*(\()""".r.findFirstMatchIn(secondPart).flatMap { secondMatch =>
+          val secondOpen = secondMatch.start(1)
+          val secondClose =
+            secondPart.findBalanced('(', ')', secondOpen).get
 
-    val wrapped = source.substring(firstOpen + 1, firstClose)
+          if (secondClose == -1) {
+            None
+          } else {
+            val titleMatcher = """<?([\S&&[^)>]]*)>?[\t ]+"([^)]*)"""".r
 
-    val secondPart = source.substring(firstClose + 1)
+            val linkContent = secondPart.substring(secondOpen + 1, secondClose)
 
-    val secondMatch = """^\s*(\()""".r.findFirstMatchIn(secondPart).getOrElse(return None)
+            var url: String = ""
 
-    val secondOpen = secondMatch.start(1)
+            val titleOpt = titleMatcher.findFirstMatchIn(linkContent) match {
+              case Some(matcher) =>
+                url = matcher.group(1)
+                Some(matcher.group(2))
 
-    val secondClose =
-      secondPart.findBalanced('(', ')', secondOpen).get
+              case None =>
+                url = linkContent
+                None
+            }
 
-    if (secondClose == -1) return None
+            """<(.*)>""".r.findFirstMatchIn(url).foreach(x => url = x.group(1))
 
-    val titleMatcher = """<?([\S&&[^)>]]*)>?[\t ]+"([^)]*)"""".r // "
+            val link = if (imageIdx < firstOpen && imageIdx != -1)
+              ImageLink(convert(wrapped, Nil), url, titleOpt)
+            else
+              Link(convert(wrapped, Nil), url, titleOpt)
 
-    val linkContent = secondPart.substring(secondOpen + 1, secondClose)
+            val start = if (imageIdx != -1) Math.min(imageIdx, firstOpen)
+            else firstOpen
 
-    var titleOpt: Option[String] = None
-    var url: String = ""
+            val beforeOpt = if (start > 0) Some(Text(source.substring(0, start)))
+            else None
 
-    titleMatcher.findFirstMatchIn(linkContent) match {
-      case Some(matcher) =>
-        url = matcher.group(1)
-        titleOpt = Some(matcher.group(2))
+            val close = firstClose + secondClose + 1
 
-      case None =>
-        url = linkContent
-        titleOpt = None
+            val afterOpt = if (source.length > close + 1)
+              Some(source.substring(close + 1))
+            else None
+
+            Some(SpanMatch(start, beforeOpt, link, afterOpt))
+          }
+        }
+      }
     }
-
-    """<(.*)>""".r.findFirstMatchIn(url).foreach(x => url = x.group(1))
-
-    val link = if (imageIdx < firstOpen && imageIdx != -1)
-      ImageLink(convert(wrapped, Nil), url, titleOpt)
-    else
-      Link(convert(wrapped, Nil), url, titleOpt)
-
-    val start = if (imageIdx != -1) Math.min(imageIdx, firstOpen)
-    else firstOpen
-
-    val beforeOpt = if (start > 0) Some(Text(source.substring(0, start)))
-    else None
-
-    val close = firstClose + secondClose + 1
-
-    val afterOpt = if (source.length > close + 1)
-      Some(source.substring(close + 1))
-    else None
-
-    Some(SpanMatch(start, beforeOpt, link, afterOpt))
   }
 
   /** We have to match parens, to support this stuff: [wr [app] ed] [thing] */
   def findReferenceMatch(source: String): Option[SpanMatch] = {
     val firstOpen = source.indexOf('[')
-    if (firstOpen == -1) return None
+    if (firstOpen == -1) {
+      None
+    } else {
+      source.findBalanced('[', ']', firstOpen).flatMap { firstClose =>
+        val secondPart = source.substring(firstClose + 1)
 
-    val firstClose =
-      source.findBalanced('[', ']', firstOpen).getOrElse(return None)
+        """^\s*(\[)""".r.findFirstMatchIn(secondPart).flatMap { secondMatch =>
 
-    val secondPart = source.substring(firstClose + 1)
+          val secondClose =
+            secondPart.findBalanced('[', ']', secondMatch.start(1)).get
 
-    val secondMatch =
-      """^\s*(\[)""".r.findFirstMatchIn(secondPart).getOrElse(return None)
+          if (secondClose == -1) {
+            None
+          } else {
+            val refID = {
+              val no2 = secondPart.substring(secondMatch.start(1) + 1, secondClose)
+              if (no2.isEmpty) source.substring(firstOpen + 1, firstClose) else no2
+            }
+            val precedingText = source.substring(0, firstOpen).toOption.map(Text(_))
 
-    val secondClose =
-      secondPart.findBalanced('[', ']', secondMatch.start(1)).get
-    if (secondClose == -1) return None
-
-    val refID = {
-      val no2 = secondPart.substring(secondMatch.start(1) + 1, secondClose)
-      if (no2.isEmpty) source.substring(firstOpen + 1, firstClose) else no2
-    }
-    val precedingText = source.substring(0, firstOpen).toOption.map(Text(_))
-
-    definitions.find(_.id equalsIgnoreCase refID).map {
-      definition: LinkDefinitionChunk =>
-        val link = Link(List(Text(source.substring(firstOpen + 1, firstClose))),
-          definition.url, definition.title)
-        val after = source.substring(firstClose + secondClose + 2).toOption
-        SpanMatch(firstOpen, precedingText, link, after)
+            definitions.find(_.id equalsIgnoreCase refID).map {
+              definition: LinkDefinitionChunk =>
+                val link = Link(List(Text(source.substring(firstOpen + 1, firstClose))),
+                  definition.url, definition.title)
+                val after = source.substring(firstClose + secondClose + 2).toOption
+                SpanMatch(firstOpen, precedingText, link, after)
+            }
+          }
+        }
+      }
     }
   }
 }
