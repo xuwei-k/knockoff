@@ -12,8 +12,15 @@ val tagOrHash = Def.setting {
   else tagName.value
 }
 
-val unusedWarnings = Seq(
-  "-Ywarn-unused"
+val unusedWarnings = Def.setting(
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, v)) if v <= 10 =>
+      Nil
+    case Some((2, 11)) =>
+      Seq("-Ywarn-unused-import")
+    case _ =>
+      Seq("-Ywarn-unused:imports")
+  }
 )
 
 val parserCombinatorsVersion = settingKey[String]("")
@@ -52,12 +59,10 @@ val commonSettings = Seq[Def.SettingsDefinition](
       "https://github.com/foundweekends/knockoff/tree/" + tagOrHash.value + "€{FILE_PATH}.scala"
     )
   },
-  scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
-    case Some((2, v)) if v >= 11 => unusedWarnings
-  }.toList.flatten,
+  scalacOptions ++= unusedWarnings.value,
   scalacOptions ++= Seq("-language:_", "-deprecation", "-Xfuture", "-Xlint"),
   Seq(Compile, Test).flatMap(c =>
-    scalacOptions in (c, console) --= unusedWarnings
+    scalacOptions in (c, console) --= unusedWarnings.value
   ),
 ).flatMap(_.settings)
 
