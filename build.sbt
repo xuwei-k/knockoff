@@ -93,10 +93,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
       }
     },
     libraryDependencies += {
-      if (scalaBinaryVersion.value == "2.13")
-        "org.scalatest" % "scalatest_2.13.0-RC3" % "3.0.8-RC5" % "test"
-      else
-        "org.scalatest" %% "scalatest" % "3.0.8-RC5" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.8" % "test"
     },
     libraryDependencies ++= Seq(
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
