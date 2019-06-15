@@ -5,8 +5,9 @@ scala:
 - 2.11.12
 - 2.12.8
 - 2.13.0
+dist: xenial
 jdk:
-- oraclejdk8
+- openjdk8
 script:
 - sbt "++${TRAVIS_SCALA_VERSION}! -v" test
 matrix:
