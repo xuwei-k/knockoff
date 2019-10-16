@@ -84,14 +84,6 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     buildInfoPackage := "knockoff",
     buildInfoObject := "KnockoffBuildInfo",
     name := "knockoff",
-    // TODO remove when scalatest_2.13 released
-    conflictWarning := {
-      if (scalaBinaryVersion.value == "2.13") {
-        ConflictWarning.disable
-      } else {
-        conflictWarning.value
-      }
-    },
     libraryDependencies += {
       "org.scalatest" %% "scalatest" % "3.0.8" % "test"
     },
