@@ -5,7 +5,7 @@ val tagName = Def.setting{
   s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
 }
 
-val Scala212 = "2.12.8"
+val Scala212 = "2.12.10"
 
 val tagOrHash = Def.setting {
   if(isSnapshot.value) sys.process.Process("git rev-parse HEAD").lineStream_!.head
@@ -48,7 +48,7 @@ val commonSettings = Def.settings(
     pushChanges
   ),
   scalaVersion := Scala212,
-  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.0"),
+  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.1"),
   organization := "org.foundweekends",
   scalacOptions in (Compile, doc) ++= {
     val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
