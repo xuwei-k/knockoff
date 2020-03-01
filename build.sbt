@@ -13,17 +13,11 @@ val tagOrHash = Def.setting {
 }
 
 val unusedWarnings = Def.setting(
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, v)) if v <= 10 =>
-      Nil
-    case Some((2, 11)) =>
-      Seq("-Ywarn-unused-import")
-    case _ =>
-      Seq("-Ywarn-unused:imports")
-  }
+  Seq("-Ywarn-unused:imports")
 )
 
 val parserCombinatorsVersion = settingKey[String]("")
+val xmlVersion = settingKey[String]("")
 
 val commonSettings = Def.settings(
   releaseTagName := tagName.value,
@@ -48,7 +42,7 @@ val commonSettings = Def.settings(
     pushChanges
   ),
   scalaVersion := Scala212,
-  crossScalaVersions := Seq("2.11.12", Scala212, "2.10.7", "2.13.1"),
+  crossScalaVersions := Seq(Scala212, "2.13.1"),
   organization := "org.foundweekends",
   scalacOptions in (Compile, doc) ++= {
     val base = (baseDirectory in LocalRootProject).value.getAbsolutePath
@@ -126,27 +120,14 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
         </developer>
       </developers>
     ),
-    parserCombinatorsVersion := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 11)) =>
-          "1.1.1"
-        case _ =>
-          "1.1.2"
-      }
-    },
-    libraryDependencies := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, scalaMajor)) if scalaMajor >= 11 =>
-          libraryDependencies.value ++ Seq(
-            "org.scala-lang.modules" %%% "scala-xml" % "1.2.0",
-            "org.scala-lang.modules" %%% "scala-parser-combinators" % parserCombinatorsVersion.value
-          )
-        case _ =>
-          libraryDependencies.value
-      }
-    }
+    parserCombinatorsVersion := "1.1.2",
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %%% "scala-xml" % xmlVersion.value,
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % parserCombinatorsVersion.value
+    )
   )
   .jsSettings(
+    xmlVersion := "2.0.0-M1",
     scalacOptions += {
       val a = (baseDirectory in LocalRootProject).value.toURI.toString
       val g = "https://raw.githubusercontent.com/foundweekends/knockoff/" + tagOrHash.value
@@ -154,6 +135,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     },
   )
   .jvmSettings(
+    xmlVersion := "1.2.0",
   )
 
 val jvm = knockoff.jvm
