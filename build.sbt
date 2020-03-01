@@ -36,9 +36,9 @@ val commonSettings = Def.settings(
       },
       enableCrossBuild = true
     ),
+    releaseStepCommandAndRemaining("sonatypeBundleRelease"),
     setNextVersion,
     commitNextVersion,
-    releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   ),
   scalaVersion := Scala212,
@@ -85,13 +85,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
       "net.sf.jtidy" % "jtidy" % "r938" % "test"
     ),
     publishMavenStyle := true,
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value)
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
+    publishTo := sonatypePublishToBundle.value,
     publishArtifact in Test := false,
     pomIncludeRepository := { _ => false },
     pomExtra := (
