@@ -129,7 +129,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     },
   )
   .jvmSettings(
-    xmlVersion := "1.2.0",
+    xmlVersion := "1.3.0",
   )
 
 val jvm = knockoff.jvm
