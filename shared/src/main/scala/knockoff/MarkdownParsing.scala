@@ -941,7 +941,7 @@ class SpanConverter(definitions: collection.Seq[LinkDefinitionChunk])
             val precedingText = source.substring(0, firstOpen).toOption.map(Text(_))
 
             definitions.find(_.id equalsIgnoreCase refID).map {
-              definition: LinkDefinitionChunk =>
+              definition =>
                 val link = Link(List(Text(source.substring(firstOpen + 1, firstClose))),
                   definition.url, definition.title)
                 val after = source.substring(firstClose + secondClose + 2).toOption
