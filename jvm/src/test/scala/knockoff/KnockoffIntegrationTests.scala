@@ -79,8 +79,8 @@ class KnockoffIntegrationTests extends AnyFunSpec with Matchers {
     it( "should convert tests from Markdown to XHTML" ) {
       val dir = file( basedir, "discounter_markdown-xhtml" )
       dir.listTests(".text", ".html").foreach { case (from, to) =>
-        from should be ('exists)
-        to should be ('exists)
+        from should be (Symbol("exists"))
+        to should be (Symbol("exists"))
         println( "Test: " + from.getName )
         val fromXHTML = writeString( toXHTML( knockoff( from.text ) ) )
         //tidy( fromXHTML ) should equal ( tidy( to.text ) )
@@ -90,8 +90,8 @@ class KnockoffIntegrationTests extends AnyFunSpec with Matchers {
     it( "should convert tests from Markdown to plain text" ) {
       val dir = file( basedir, "discounter_markdown-text" )
       dir.listTests(".markdown", ".txt").foreach { case (from, to) =>
-        from should be ('exists)
-        to should be ('exists)
+        from should be (Symbol("exists"))
+        to should be (Symbol("exists"))
         println( "Test: " + from.getName )
         val fromText = normalizeSpace( toText( knockoff( from.text ) ) )
         fromText should equal ( normalizeSpace( to.text ) )
