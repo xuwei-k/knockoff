@@ -118,7 +118,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %%% "scala-xml" % xmlVersion.value,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % parserCombinatorsVersion.value
-    )
+    ).map(_.withDottyCompat(scalaVersion.value))
   )
   .jsSettings(
     xmlVersion := "2.0.0-M1",
