@@ -91,7 +91,7 @@ class SpanConverterSpec extends AnyFunSpec with Matchers {
       convert( txt, defs ) should equal {
         List( Text("A "),
               Link( List(Text("link")), "http://example.com/link1", None ),
-          		Text(" An "),
+              Text(" An "),
               ImageLink( List(Text("image link")), "http://example.com/image1",
                          Some("image test") ),
               Text(" The "),
