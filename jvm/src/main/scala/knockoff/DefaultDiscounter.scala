@@ -40,11 +40,11 @@ object DefaultDiscounter extends Discounter with XHTMLWriter {
 
     if (args.isEmpty) {
       val sb = new StringBuilder
-      var line: String = null
-      do {
+      var line: String = Console.in.readLine()
+      while(line != null) {
+        sb.append(line)
         line = Console.in.readLine()
-        if (line != null) sb.append(line)
-      } while (line != null)
+      }
       println(toXHTML(knockoff(sb.toString)).toString)
     } else {
       args.filter(_ != "--html4tags").foreach {
