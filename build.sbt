@@ -121,7 +121,7 @@ val knockoff = crossProject(JVMPlatform, JSPlatform)
     ).map(_.withDottyCompat(scalaVersion.value))
   )
   .jsSettings(
-    xmlVersion := "2.0.0-M1",
+    xmlVersion := "2.0.0-M2",
     scalacOptions += {
       val a = (baseDirectory in LocalRootProject).value.toURI.toString
       val g = "https://raw.githubusercontent.com/foundweekends/knockoff/" + tagOrHash.value
