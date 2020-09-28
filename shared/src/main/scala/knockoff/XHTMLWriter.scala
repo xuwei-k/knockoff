@@ -128,7 +128,7 @@ trait XHTMLWriter {
 
   def imageLinkToXHTML : ( collection.Seq[Span], String, Option[String] ) => Node = {
     ( spans, url, title ) => <img src={ url } title={ title.getOrElse(null) }
-                                     alt={ spans.map( spanToXHTML(_) ) } ></img>
+                                     alt={ spans.map( spanToXHTML(_) ) } />
   }
 
   def escapeURL( url : String ) : Node = {
